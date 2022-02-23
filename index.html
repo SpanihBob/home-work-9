@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dz_9</title>
+</head>
+<body>
+    
+<!-- Задание 1
+Реализовать класс, описывающий окружность. В классе должны быть следующие компоненты:
+    поле, хранящее радиус окружности;
+    get-свойство, возвращающее радиус окружности;
+    set-свойство, устанавливающее радиус окружности;
+    get-свойство, возвращающее диаметр окружности;
+    метод, вычисляющий площадь окружности;
+    метод, вычисляющий длину окружности.
+Продемонстрировать работу свойств и методов. -->
+
+<script>
+    console.log('Задание 1');
+    console.log('');
+   
+    class Form {
+         #radius;
+        constructor(radius){
+            this.#radius = radius;
+        }
+
+        get radius() {
+            return this.#radius;
+        }
+
+        set radius(value) {
+            this.#radius = value;
+        }
+
+        get diameter() {
+            return this.#radius * 2;                  
+        }
+
+        areaOfACircle() {
+            let area = Math.PI * Math.pow(this.#radius, 2);
+            console.log('площадь круга: ' + area);
+        }
+
+        circumference() {
+            let circle = 2 * Math.PI * this.#radius;
+            console.log('длина окружности: ' + circle);
+        }
+    }
+
+    let figure1 = new Form(10);
+    console.log('диаметр: ' + figure1.diameter); 
+    console.log('радиус: ' + figure1.radius);
+    figure1.areaOfACircle();
+    figure1.circumference();
+    console.log('');
+</script>
+
+
+<!-- Задание 2
+Реализовать класс, описывающий html элемент. Класс HtmlElement должен содержать внутри себя:
+    название тега;
+    самозакрывающийся тег или нет;
+    текстовое содержимое;
+    массив атрибутов;
+    массив стилей;
+    массив вложенных таких же тегов;
+    метод для установки атрибута;
+    метод для установки стиля;
+    метод для добавления вложенного элемента в конец текущего элемента;
+    метод для добавления вложенного элемента в начало текущего элемента;
+    метод getHtml(), который возвращает html код в виде строки, включая html код вложенных элементов.
+    
+С помощью написанного класса реализовать следующий блок и добавить его на страницу с помощью document.write().
+Обратите внимание. Чтобы получить весь этот html в виде строки должно быть достаточно вызвать метод getHtml только
+у тега с идентификатором wrapper. -->
+
+<script>
+    document.writeln('Задание 2');
+
+    class HtmlElement {
+            constructor (tag, oneTwo, text, atr, style, tagInTag) {
+                this.tag = tag;
+                this.oneTwo = oneTwo;
+                this.text = text;
+                this.atr = atr;
+                this.style = style;
+                this.tagInTag = tagInTag;
+            }
+            addAtr() {                                  //функция обьединяет массив атрибутов в строку
+                this.atr = this.atr.join(' ');
+                return;
+                // console.log(this.atr);
+            }
+            addStyle() {                                //функция обьединяет массив стилей в строку
+                this.style = this.style.join(' ');
+                return;
+                // console.log(this.style);
+            }
+            addTagEnd(new_tag) {                                 //функция добавления тега в конец                   
+                this.tagInTag.push(new_tag);                     //Метод push() добавляет один или более элементов в конец массива и возвращает новую длину массива.
+            }
+            addTagHome(new_tag) {                                //функция добавления тега в конец     
+                this.tagInTag.unshift(new_tag);                  //Метод unshift() добавляет один или более элементов в начало массива и возвращает новую длину массива.
+            }
+            
+            getHtml() {                                         //функция вывода html
+                    if (this.atr && this.style) {               
+                        document.writeln('<' + this.tag + ' ' + this.atr + 'style="' + this.style + '">' + this.text);
+                    } else if (this.atr) { 
+                        document.writeln('<' + this.tag + ' ' + this.atr + '>' + this.text);
+                        } else if (this.style) {
+                            document.writeln('<' + this.tag + ' ' + 'style="' + this.style + '">' + this.text);
+                            } else {document.writeln('<' + this.tag + ' ' + '">' + this.text);                            
+                            }
+                    if (this.tagInTag){
+                              this.tagInTag.forEach(function (el) {
+                                  el.getHtml();
+                              });
+                    }                        
+                        
+                    if (this.oneTwo == 2) {
+                        document.writeln('</' + this.tag + '>');                    //для закрывающегося тега   
+                    }                                              
+            }
+        }
+        
+        let a = new HtmlElement('a', 2, 'More...', ['href="https://www.lipsum.com/"', 'target="_blank"']);
+        let h3 = new HtmlElement('h3', 2, 'What is Lorem ipsum?');
+        let img = new HtmlElement('img', 1, '', ['src="lipsum.jpg"', 'alt="lorem ipsum"'], ['width: 100%']);
+        let p = new HtmlElement('p', 2, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo quos atque reiciendis animi iure deleniti odit ut tempora. Similique tenetur et quia fugit, possimus repellat ducimus a asperiores amet deleniti!', [], ['text-align:justify;'], [a]);
+        let div = new HtmlElement('div', 2, '', [], ['width: 300px;', 'margin: 10px;'],[h3, img, p]);       
+        let new_html = new HtmlElement('div', 2, '', ['id="wrapper"'], ['display: flex;'], [div, div]);
+        let p_1 = new HtmlElement('p', 2, 'Привет Мир!', [], ['text-align:justify;']);
+
+        new_html.addStyle();                      //выводим стили в строку         
+        div.addStyle();
+        img.addStyle();
+        p.addStyle();
+        
+        new_html.addAtr();                      //выводим атрибуты
+        img.addAtr();
+        a.addAtr();
+       
+
+        // console.log(new_html.tagInTag);           //массив вложеных тегов до добавления
+
+        // new_html.addTagEnd(img);                      //проверяем добавление в конец
+        // console.log(new_html.tagInTag);
+
+        // new_html.addTagHome(h3);                      //проверяем добавление в начало
+        // console.log(new_html.tagInTag);
+
+        new_html.getHtml();                       //выводим html
+
+   
+</script>
+
+<!-- Задание 3
+Реализовать класс, который описывает css класс. Класс CssClass должен содержать внутри себя:
+    название css класса;
+    массив стилей;
+    метод для установки стиля;
+    метод для удаления стиля;
+    метод getCss(), который возвращает css код в виде строки. -->
+
+    <script>
+        document.writeln('Задание 3');
+
+        class CssClass {
+            constructor(name, style) {
+                this.name = name;
+                this.style = style;               
+            }
+            addStyle(st) {
+                this.style.push(st);                                        //метод для установки стиля;
+            }
+            delStyle(num){                                                  //метод для удаления стиля;
+                this.style.splice(num, 1);                                  // начиная с позиции num, удалить 1 элемент
+                        }
+
+            getCss() {                                                      //метод getCss(), который возвращает css код в виде строки.                
+                    document.writeln('<style>');
+                        document.writeln('.' + this.name + ' {');
+
+                        this.style.forEach( function(element){                            
+                            document.writeln(element);
+                        });
+
+                        document.writeln('}'); 
+                    document.writeln('</style>');                                        
+            }
+        }
+        let new_style = 'border: solid 30px green;';
+        let stl = new CssClass('rectangle', ['background-color: black;', 'height: 200px;', 'width: 400px;', 'color: red;']);
+        let stl1 = new CssClass('rect', ['background-color: blue;', 'height: 100px;', 'width: 200px;', 'color: green;']);
+        console.log(stl.name);
+        console.log(stl);
+        console.log('');
+        stl.getCss();                                    //проверяем работу метода getCss()                
+        stl1.getCss();
+        stl.addStyle(new_style);
+        console.log(stl);
+        // stl.getCss();                                    //проверяем работу метода addStyle()
+        stl.delStyle(0);
+        // stl.getCss();                                       //проверяем работу метода delStyle()
+    </script>
+    
+    <p class="rectangle">dfgdgf</p>
+    <p class="rect">dfgdgf</p>
+
+<!-- Задание 4
+Реализовать класс, описывающий блок html документ.
+Класс HtmlBlock должен содержать внутри себя:
+    коллекцию стилей, описанных с помощью класса CssClass;
+    корневой элемент, описанный с помощью класса HtmlElement;
+    метод getCode(), который возвращает строку с html кодом (сначала теги style с описанием всех классов, а потом
+    все html содержимое из корневого тега и его вложенных элементов).
+С помощью написанных классов реализовать следующий блок (см. рис. 2) и добавить его на страницу с помощью document.write().   -->
+
+закоментировал 4 заданиеб т.к. конфликтует с 2 и 3 заданиями
+
+   <!-- <script>
+       document.writeln('Задание 4');
+      
+       class CssClass {                                                     //класс со стилями
+            constructor(name, style) {
+                this.name = name;
+                this.style = style;               
+            }
+            addStyle(st) {
+                this.style.push(st);                                        //метод для установки стиля;
+            }
+            delStyle(num){                                                  //метод для удаления стиля;
+                this.style.splice(num, 1);                                  // начиная с позиции num, удалить 1 элемент
+                        }
+
+            getCss() {                                                      //метод getCss(), который возвращает css код в виде строки.                
+                    document.writeln('<style>');
+                        document.writeln('.' + this.name + ' {');
+
+                        this.style.forEach( function(element){                            
+                            document.writeln(element);
+                        });
+
+                        document.writeln('}'); 
+                    document.writeln('</style>');                                        
+            }
+        }
+        
+        //заводим переменные - обьекты со стилями
+        let wrap_style = new CssClass('wrap', ['display: flex;']);
+        let block_style = new CssClass('block', ['width: 300px;', 'margin: 10px;']);
+        let img_style = new CssClass('img', ['width: 100%']);
+        let text_style = new CssClass('text', ['text-align:justify;']);     
+
+        //выводим стили в документ
+        wrap_style.getCss();
+        block_style.getCss();
+        img_style.getCss();
+        text_style.getCss();              
+        
+      
+       class HtmlElement {                                              //класс с html
+            constructor (tag, oneTwo, text, atr, tagInTag) {
+                this.tag = tag;
+                this.oneTwo = oneTwo;
+                this.text = text;
+                this.atr = atr;
+                this.tagInTag = tagInTag;
+            }
+            addAtr() {                                  //функция обьединяет массив атрибутов в строку
+                this.atr = this.atr.join(' ');
+                return;
+                // console.log(this.atr);
+            }
+            
+            addTagEnd(new_tag) {                                 //функция добавления тега в конец                   
+                this.tagInTag.push(new_tag);                     //Метод push() добавляет один или более элементов в конец массива и возвращает новую длину массива.
+            }
+            addTagHome(new_tag) {                                //функция добавления тега в конец     
+                this.tagInTag.unshift(new_tag);                  //Метод unshift() добавляет один или более элементов в начало массива и возвращает новую длину массива.
+            }
+            
+            getHtml() {                                         //функция вывода html
+                    if (this.atr) { 
+                        document.writeln('<' + this.tag + ' ' + this.atr + '>' + this.text);
+                        } else {document.writeln('<' + this.tag + ' ' + '">' + this.text);                            
+                            }
+                    if (this.tagInTag){
+                              this.tagInTag.forEach(function (el) {
+                                  el.getHtml();
+                              });
+                    }                        
+                        
+                    if (this.oneTwo == 2) {
+                        document.writeln('</' + this.tag + '>');                    //для закрывающегося тега   
+                    }                                              
+            }
+        }
+        
+        let a = new HtmlElement('a', 2, 'More...', ['href="https://www.lipsum.com/"', 'target="_blank"']);
+        let h3 = new HtmlElement('h3', 2, 'What is Lorem ipsum?');
+        let img = new HtmlElement('img', 1, '', ['class="img"', 'src="lipsum.jpg"', 'alt="lorem ipsum"']);
+        let p = new HtmlElement('p', 2, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo quos atque reiciendis animi iure deleniti odit ut tempora. Similique tenetur et quia fugit, possimus repellat ducimus a asperiores amet deleniti!', ['class="text"'], [a]);
+        let div = new HtmlElement('div', 2, '', ['class="block"'],[h3, img, p]);       
+        let new_html = new HtmlElement('div', 2, '', ['id="wrapper"', 'class="wrap"'], [div, div]);
+        let p_1 = new HtmlElement('p', 2, 'Привет Мир!', []);
+
+        new_html.addAtr();                      //выводим атрибуты
+        img.addAtr();
+        a.addAtr();
+        div.addAtr();
+
+        new_html.getHtml();                       //выводим html
+       
+    </script> -->
+    
+</body>
+</html>
